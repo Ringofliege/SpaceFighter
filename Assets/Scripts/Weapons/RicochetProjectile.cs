@@ -49,7 +49,7 @@ namespace SpaceFighter
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsServerInitialized) return;
-            if (other.gameObject.layer == 8) return;
+            if (other.gameObject.layer == GameConstants.ProjectileLayer) return;
 
             PlayerShip target = other.GetComponent<PlayerShip>();
             if (target != null)
@@ -67,7 +67,7 @@ namespace SpaceFighter
             // Wall or asteroid – attempt bounce
             if (BounceCount < _maxBounces)
             {
-                int layerMask = ~(1 << 8);
+                int layerMask = ~(1 << GameConstants.ProjectileLayer);
                 RaycastHit2D hit = Physics2D.Raycast(
                     (Vector2)transform.position - _direction * 0.5f,
                     _direction, 2f, layerMask);
@@ -85,7 +85,7 @@ namespace SpaceFighter
 
         private void CreateVisuals()
         {
-            gameObject.layer = 8;
+            gameObject.layer = GameConstants.ProjectileLayer;
 
             Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0f;

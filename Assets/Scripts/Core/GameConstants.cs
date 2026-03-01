@@ -118,6 +118,9 @@ namespace SpaceFighter
         public const int MaxVanguards = 2;
         public const int MaxDisruptors = 2;
 
+        // Layers
+        public const int ProjectileLayer = 8;
+
         // Physics
         public const float MicroKnockback = 2f;
         public const float ShieldBashForce = 15f;

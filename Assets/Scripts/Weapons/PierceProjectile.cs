@@ -45,7 +45,7 @@ namespace SpaceFighter
         private void OnTriggerEnter2D(Collider2D other)
         {
             if (!IsServerInitialized) return;
-            if (other.gameObject.layer == 8) return;
+            if (other.gameObject.layer == GameConstants.ProjectileLayer) return;
 
             // Pass through barrier colliders
             if (other.GetComponentInParent<VanguardBarrier>() != null
@@ -96,7 +96,7 @@ namespace SpaceFighter
 
         private void CreateVisuals()
         {
-            gameObject.layer = 8;
+            gameObject.layer = GameConstants.ProjectileLayer;
 
             Rigidbody2D rb = gameObject.AddComponent<Rigidbody2D>();
             rb.gravityScale = 0f;
