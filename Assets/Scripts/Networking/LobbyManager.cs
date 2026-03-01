@@ -1,10 +1,9 @@
-using System.Collections.Generic;
 using FishNet.Connection;
+using FishNet.Managing.Scening;
 using FishNet.Object;
 using FishNet.Object.Synchronizing;
 using FishNet.Transporting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace SpaceFighter
 {
@@ -216,7 +215,7 @@ namespace SpaceFighter
             if (GameManager.Instance != null)
                 GameManager.Instance.StartMatch();
 
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadGlobalScenes(new SceneLoadData("Game"));
         }
 
         private int LocalClientId

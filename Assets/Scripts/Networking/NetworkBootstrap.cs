@@ -1,8 +1,8 @@
 using FishNet;
 using FishNet.Managing;
+using FishNet.Managing.Scening;
 using FishNet.Transporting;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace SpaceFighter
 {
@@ -56,7 +56,8 @@ namespace SpaceFighter
                 _status = "Connected!";
                 _connecting = false;
                 Debug.Log("[NetworkBootstrap] Client connected. Loading Lobby scene.");
-                SceneManager.LoadScene("Lobby");
+                if (_networkManager.IsServerStarted)
+                    _networkManager.SceneManager.LoadGlobalScenes(new SceneLoadData("Lobby"));
             }
             else if (args.ConnectionState == LocalConnectionState.Stopped)
             {
