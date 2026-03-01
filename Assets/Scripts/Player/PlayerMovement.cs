@@ -18,6 +18,14 @@ namespace SpaceFighter
         private Vector2 _aimDirection = Vector2.up;
         private Vector2 _velocity;
 
+        private bool _isStunned;
+        private float _stunTimer;
+
+        public bool IsStunned
+        {
+            get { return _isStunned; }
+        }
+
         private float _speedMultiplier = 1f;
         public float SpeedMultiplier
         {
@@ -70,6 +78,14 @@ namespace SpaceFighter
         private void FixedUpdate()
         {
             if (!IsServerInitialized) return;
+
+            if (_isStunned)
+            {
+                _stunTimer -= Time.fixedDeltaTime;
+                if (_stunTimer <= 0f)
+                    _isStunned = false;
+                _inputDirection = Vector2.zero;
+            }
 
             float classMult = GetClassSpeedMultiplier();
             float maxSpeed = GameConstants.BaseSpeed * classMult * _speedMultiplier;
@@ -138,6 +154,14 @@ namespace SpaceFighter
         public void ApplyForce(Vector2 force)
         {
             _velocity += force;
+        }
+
+        [Server]
+        public void ApplyStun(float duration)
+        {
+            _isStunned = true;
+            _stunTimer = duration;
+            _inputDirection = Vector2.zero;
         }
 
         private void OnCollisionStay2D(Collision2D collision)
