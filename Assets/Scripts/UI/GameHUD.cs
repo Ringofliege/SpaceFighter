@@ -152,7 +152,7 @@ namespace SpaceFighter
         {
             if (_localShip != null && _localShip.IsAlive) return;
 
-            var ships = FindObjectsOfType<PlayerShip>();
+            var ships = FindObjectsByType<PlayerShip>(FindObjectsSortMode.None);
             foreach (var s in ships)
             {
                 if (s.IsOwner)

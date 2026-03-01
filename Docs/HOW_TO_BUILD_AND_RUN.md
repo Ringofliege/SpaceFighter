@@ -255,7 +255,7 @@ This ensures the server and all clients load scenes in sync and that NetworkObje
 | Build crashes on launch | Scenes not in Build Settings | Add all 3 scenes to `File → Build Settings` |
 | Game freezes in background | Run In Background disabled | Enable in `Player Settings → Resolution and Presentation` |
 | "Type not found" errors | Assembly definition conflicts | Ensure FishNet asmdef references are correct |
-| Input not working in build | Old Input Manager selected | Set `Active Input Handling` to **Both** or **Input System Package (New)** in Player Settings |
+| Input not working in build | Legacy Input Manager not enabled | Set `Active Input Handling` to **Both** in Player Settings → Other Settings |
 
 ---
 

@@ -9,7 +9,7 @@ This guide walks through setting up the SpaceFighter project from scratch in Uni
 ### 1.1 Install Unity
 
 1. Download and install **Unity Hub** from [unity.com](https://unity.com).
-2. In Unity Hub, install **Unity 2022.3 LTS** (any 2022.3.x patch).
+2. In Unity Hub, install **Unity 6.3 LTS** (version **6000.3.10f1** or later 6000.3.x patch).
 3. During installation, ensure the **Windows Build Support** (or your target platform) module is selected.
 
 ### 1.2 Create the Project
@@ -238,27 +238,31 @@ Key decisions:
 
 ## 7. Input System
 
-SpaceFighter uses Unity's **new Input System** package. Install it via `Window → Package Manager → Input System`.
+SpaceFighter currently uses Unity's **legacy Input Manager** (`UnityEngine.Input`). This is fully supported in Unity 6.3 LTS.
 
-### 7.1 Action Map: `PlayerActions`
+In **Player Settings → Other Settings → Active Input Handling**, select **Both** to ensure the legacy Input Manager is available alongside the new Input System package (which is included in the manifest for future migration).
 
-| Action | Binding | Type | Notes |
-|---|---|---|---|
-| Move | `WASD` | Value (Vector2) | Composite Up/Down/Left/Right |
-| Aim | `Mouse Position` | Value (Vector2) | Screen-space; convert to world-space in script |
-| Fire | `Left Mouse Button` | Button | Primary weapon |
-| Ability1 | `Right Mouse Button` | Button | Class-specific ability 1 |
-| Ability2 | `Q` | Button | Class-specific ability 2 |
-| Dash | `Space` | Button | Movement dash |
-| Stabilize | `E` | Button | Self-heal (non-Vanguard) |
+### 7.1 Input Bindings
 
-### 7.2 Setup Steps
+| Action | Key / Button | API Call |
+|---|---|---|
+| Move | `WASD` | `Input.GetKey(KeyCode.W/A/S/D)` |
+| Aim | Mouse Position | `Camera.main.ScreenToWorldPoint(Input.mousePosition)` |
+| Fire | Left Mouse Button | `Input.GetMouseButton(0)` |
+| Ability 1 | Right Mouse Button | `Input.GetMouseButtonDown(1)` |
+| Ability 2 | `Q` | `Input.GetKeyDown(KeyCode.Q)` |
+| Dash | `Space` | `Input.GetKeyDown(KeyCode.Space)` |
+| Stabilize | `E` | `Input.GetKeyDown(KeyCode.E)` |
 
-1. Install the Input System package (`com.unity.inputsystem`).
+### 7.2 Optional: Migrate to Input System Package
+
+To migrate to Unity's new Input System package (`com.unity.inputsystem`):
+
+1. Install the Input System package (already in `Packages/manifest.json`).
 2. Create an **Input Actions** asset: `Assets/Input/PlayerActions.inputactions`.
-3. Define the action map as described in the table above.
+3. Define an action map matching the bindings above.
 4. Generate a C# class: enable **Generate C# Class** in the asset inspector.
-5. In each ship's `ShipController`, reference the generated class and read input in `Update()` (for UI/aim) and `FixedUpdate()` (for movement).
+5. Replace `Input.GetKey` calls with the generated action class in each player script.
 
 > **Tip:** Only process input when `base.IsOwner` is true — this prevents one client from controlling another player's ship.
 
@@ -296,7 +300,7 @@ private void OnTriggerEnter2D(Collider2D other)
 
 Use this checklist to verify your project is correctly configured:
 
-- [ ] Unity 2022.3 LTS installed
+- [ ] Unity 6.3 LTS (6000.3.x) installed
 - [ ] 2D template project created
 - [ ] FishNet Pro imported from Asset Store
 - [ ] Input System package installed

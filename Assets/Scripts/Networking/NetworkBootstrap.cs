@@ -15,7 +15,7 @@ namespace SpaceFighter
 
         private void Awake()
         {
-            _networkManager = FindObjectOfType<NetworkManager>();
+            _networkManager = FindFirstObjectByType<NetworkManager>();
             if (_networkManager == null)
             {
                 Debug.LogError("[NetworkBootstrap] NetworkManager not found in scene.");
