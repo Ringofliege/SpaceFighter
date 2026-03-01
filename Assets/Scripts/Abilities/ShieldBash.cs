@@ -13,6 +13,8 @@ namespace SpaceFighter
         private EnergySystem _energy;
         private AbilityController _abilityController;
 
+        private static readonly Collider2D[] _bashHitBuffer = new Collider2D[16];
+
         private void Awake()
         {
             _ship = GetComponent<PlayerShip>();
@@ -48,10 +50,11 @@ namespace SpaceFighter
 
             // Overlap check for targets in front
             Vector2 checkPos = (Vector2)transform.position + bashDir * 1.5f;
-            Collider2D[] hits = Physics2D.OverlapCircleAll(checkPos, 1.5f);
+            int hitCount = Physics2D.OverlapCircleNonAlloc(checkPos, 1.5f, _bashHitBuffer);
 
-            foreach (Collider2D hit in hits)
+            for (int i = 0; i < hitCount; i++)
             {
+                Collider2D hit = _bashHitBuffer[i];
                 if (hit.gameObject == gameObject) continue;
 
                 PlayerShip target = hit.GetComponent<PlayerShip>();

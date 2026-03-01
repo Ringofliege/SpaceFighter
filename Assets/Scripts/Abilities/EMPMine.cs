@@ -47,15 +47,10 @@ namespace SpaceFighter
             if (target.ShipTeam == MineTeam) return;
             if (!target.IsAlive) return;
 
-            // Apply EMP effect to the target
+            // Apply EMP effect to the target's barrier
             VanguardBarrier barrier = target.GetComponent<VanguardBarrier>();
             if (barrier != null)
                 barrier.ApplyEMPDisable(GameConstants.DisruptorEMPMineBarrierDisableDuration);
-
-            // Apply stun to movement
-            PlayerMovement movement = target.GetComponent<PlayerMovement>();
-            if (movement != null)
-                movement.ApplyStun(GameConstants.DisruptorEMPMineBarrierDisableDuration);
 
             ServerManager.Despawn(gameObject);
         }

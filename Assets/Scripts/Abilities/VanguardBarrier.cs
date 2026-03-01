@@ -94,6 +94,11 @@ namespace SpaceFighter
             if (_energy != null)
                 _energy.ClearContinuousDrain();
 
+            // Cooldown starts after deactivation
+            AbilityController ac = GetComponent<AbilityController>();
+            if (ac != null)
+                ac.Ability1Cooldown = GameConstants.VanguardBarrierCooldown;
+
             RpcBarrierStateChanged(false);
         }
 

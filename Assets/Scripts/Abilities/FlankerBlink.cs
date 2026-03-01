@@ -10,6 +10,7 @@ namespace SpaceFighter
 
         private float[] _rechargeTimers = new float[GameConstants.FlankerBlinkCharges];
         private const float BlinkDistance = 6f;
+        private static readonly Collider2D[] _hitBuffer = new Collider2D[8];
 
         private PlayerShip _ship;
         private EnergySystem _energy;
@@ -65,11 +66,11 @@ namespace SpaceFighter
             Vector2 origin = (Vector2)transform.position;
             Vector2 targetPos = origin + direction * BlinkDistance;
 
-            // Raycast for wall collision
-            RaycastHit2D hit = Physics2D.Raycast(origin, direction, BlinkDistance);
+            // Raycast for wall collision, ignore projectile layer
+            int layerMask = ~(1 << GameConstants.ProjectileLayer);
+            RaycastHit2D hit = Physics2D.Raycast(origin, direction, BlinkDistance, layerMask);
             if (hit.collider != null)
             {
-                // Check if the hit object is a wall (not a player)
                 PlayerShip hitShip = hit.collider.GetComponent<PlayerShip>();
                 if (hitShip == null)
                     targetPos = hit.point - direction * 0.2f;
