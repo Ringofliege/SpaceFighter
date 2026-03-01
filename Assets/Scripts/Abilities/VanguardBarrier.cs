@@ -6,62 +6,146 @@ namespace SpaceFighter
 {
     public class VanguardBarrier : NetworkBehaviour
     {
-        [SyncVar] public bool IsActive;
+        [SyncVar] public bool IsBarrierActive;
+        [SyncVar] public int RearModuleHP = GameConstants.VanguardBarrierRearModuleHP;
+        [SyncVar] public bool IsShieldSystemsOffline;
 
-        private int _rearModuleHP;
+        // Legacy alias so existing code referencing IsActive still compiles
+        public bool IsActive => IsBarrierActive;
+
+        private float _barrierTimer;
         private float _offlineTimer;
-        private bool _isOffline;
+        private float _empDisableTimer;
 
-        [Server]
-        public void Activate()
+        private PlayerShip _ship;
+        private PlayerMovement _movement;
+        private EnergySystem _energy;
+        private DashSystem _dash;
+
+        private void Awake()
         {
-            if (_isOffline) return;
-            IsActive = true;
-            _rearModuleHP = GameConstants.VanguardBarrierRearModuleHP;
+            _ship = GetComponent<PlayerShip>();
+            _movement = GetComponent<PlayerMovement>();
+            _energy = GetComponent<EnergySystem>();
+            _dash = GetComponent<DashSystem>();
         }
 
         [Server]
-        public void Deactivate()
+        public void ActivateBarrier()
         {
-            IsActive = false;
-        }
+            if (IsShieldSystemsOffline) return;
+            if (_empDisableTimer > 0f) return;
+            if (IsBarrierActive) return;
+            if (_energy == null || _energy.CurrentEnergy < GameConstants.VanguardBarrierEnergyCostPerSec) return;
 
-        [Server]
-        public void DamageRearModule(int damage)
-        {
-            if (!IsActive) return;
-            _rearModuleHP -= damage;
-            if (_rearModuleHP <= 0)
-            {
-                _rearModuleHP = 0;
-                ForceDropBarrier();
-            }
-        }
+            IsBarrierActive = true;
+            _barrierTimer = 0f;
+            RearModuleHP = GameConstants.VanguardBarrierRearModuleHP;
 
-        [Server]
-        public void ForceDropBarrier()
-        {
-            IsActive = false;
-        }
+            if (_movement != null)
+                _movement.SpeedMultiplier = GameConstants.VanguardBarrierSpeedMult;
 
-        [Server]
-        public void ApplyShieldOffline(float duration)
-        {
-            _isOffline = true;
-            _offlineTimer = duration;
-            IsActive = false;
+            float drainRate = GameConstants.VanguardBarrierEnergyCostPerSec;
+            if (GameManager.Instance != null && GameManager.Instance.CurrentState == GameState.Overtime)
+                drainRate = 30f;
+            if (_energy != null)
+                _energy.SetContinuousDrain(drainRate);
+
+            RpcBarrierStateChanged(true);
         }
 
         private void Update()
         {
             if (!IsServerInitialized) return;
 
-            if (_isOffline)
+            if (IsShieldSystemsOffline)
             {
                 _offlineTimer -= Time.deltaTime;
                 if (_offlineTimer <= 0f)
-                    _isOffline = false;
+                {
+                    IsShieldSystemsOffline = false;
+                    _offlineTimer = 0f;
+                }
             }
+
+            if (_empDisableTimer > 0f)
+                _empDisableTimer -= Time.deltaTime;
+
+            if (!IsBarrierActive) return;
+
+            _barrierTimer += Time.deltaTime;
+
+            if (_barrierTimer >= GameConstants.VanguardBarrierDuration ||
+                (_energy != null && _energy.CurrentEnergy <= 0f))
+            {
+                DeactivateBarrier();
+            }
+        }
+
+        [Server]
+        public void DeactivateBarrier()
+        {
+            if (!IsBarrierActive) return;
+            IsBarrierActive = false;
+
+            if (_movement != null)
+                _movement.SpeedMultiplier = 1f;
+
+            if (_energy != null)
+                _energy.ClearContinuousDrain();
+
+            RpcBarrierStateChanged(false);
+        }
+
+        [Server]
+        public void DamageRearModule(int damage)
+        {
+            if (!IsBarrierActive) return;
+            RearModuleHP -= damage;
+            if (RearModuleHP <= 0)
+            {
+                RearModuleHP = 0;
+                ForceDropBarrier();
+                ApplyShieldOffline(3f);
+            }
+        }
+
+        [Server]
+        public void ForceDropBarrier()
+        {
+            if (!IsBarrierActive) return;
+            IsBarrierActive = false;
+
+            if (_movement != null)
+                _movement.SpeedMultiplier = 1f;
+
+            if (_energy != null)
+                _energy.ClearContinuousDrain();
+
+            RpcBarrierStateChanged(false);
+        }
+
+        [Server]
+        public void ApplyShieldOffline(float duration)
+        {
+            IsShieldSystemsOffline = true;
+            _offlineTimer = duration;
+            if (IsBarrierActive)
+                ForceDropBarrier();
+        }
+
+        [Server]
+        public void ApplyEMPDisable(float duration)
+        {
+            _empDisableTimer = duration;
+            if (IsBarrierActive)
+                ForceDropBarrier();
+        }
+
+        [ObserversRpc]
+        private void RpcBarrierStateChanged(bool active)
+        {
+            // Visual updates handled by client-side systems
         }
     }
 }
