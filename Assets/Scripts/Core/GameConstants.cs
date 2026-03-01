@@ -75,36 +75,44 @@ namespace SpaceFighter
 
         // Abilities – Vanguard
         public const float VanguardBarrierDuration = 4f;
-        public const float VanguardBarrierCooldown = 10f;
-        public const int VanguardBarrierEnergyCost = 30;
-        public const float VanguardShieldBashCooldown = 6f;
-        public const int VanguardShieldBashEnergyCost = 25;
+        public const float VanguardBarrierCooldown = 6f;
+        public const int VanguardBarrierEnergyCostPerSec = 25;
+        public const int VanguardBarrierRearModuleHP = 70;
+        public const float VanguardShieldBashCooldown = 8f;
+        public const int VanguardShieldBashEnergyCost = 35;
+        public const int VanguardShieldBashDamage = 20;
 
         // Abilities – Striker
-        public const float StrikerPierceShotCooldown = 5f;
-        public const int StrikerPierceShotEnergyCost = 30;
-        public const int StrikerPierceShotDamage = 35;
-        public const float StrikerOverclockDuration = 4f;
-        public const float StrikerOverclockCooldown = 12f;
-        public const int StrikerOverclockEnergyCost = 40;
+        public const float StrikerOverdriveDuration = 4f;
+        public const float StrikerOverdriveCooldown = 10f;
+        public const int StrikerOverdriveEnergyCost = 40;
+        public const float StrikerOverdriveFireRateBonus = 0.25f;
+        public const float StrikerOverdriveHeatPenalty = 0.2f;
+        public const float StrikerRicochetShotCooldown = 12f;
+        public const int StrikerRicochetShotEnergyCost = 45;
+        public const float StrikerRicochetShotDamagePercent = 0.35f;
+        public const int StrikerRicochetShotBounces = 1;
 
         // Abilities – Disruptor
-        public const float DisruptorEMPRadius = 3.5f;
-        public const float DisruptorEMPSlowDuration = 2f;
-        public const float DisruptorEMPCooldown = 8f;
-        public const int DisruptorEMPEnergyCost = 35;
-        public const float DisruptorTetherRange = 5f;
-        public const float DisruptorTetherDuration = 3f;
-        public const float DisruptorTetherCooldown = 10f;
-        public const int DisruptorTetherEnergyCost = 35;
+        public const float DisruptorPierceCannonChargeTime = 2.5f;
+        public const float DisruptorPierceCannonMoveSpeedMult = 0.3f;
+        public const int DisruptorPierceCannonEnergyCost = 60;
+        public const float DisruptorPierceCannonCooldown = 14f;
+        public const float DisruptorPierceCannonStandardDmgPercent = 0.6f;
+        public const float DisruptorPierceCannonVanguardDmgPercent = 0.3f;
+        public const float DisruptorPierceCannonStunDuration = 0.4f;
+        public const float DisruptorEMPMineArmTime = 1f;
+        public const float DisruptorEMPMineBarrierDisableDuration = 1.5f;
+        public const int DisruptorEMPMineEnergyCost = 45;
+        public const float DisruptorEMPMineCooldown = 14f;
 
         // Abilities – Flanker
-        public const float FlankerCloakDuration = 3f;
-        public const float FlankerCloakCooldown = 9f;
-        public const int FlankerCloakEnergyCost = 30;
-        public const float FlankerBlinkRange = 5f;
-        public const float FlankerBlinkCooldown = 7f;
-        public const int FlankerBlinkEnergyCost = 30;
+        public const int FlankerBlinkEnergyCost = 35;
+        public const int FlankerBlinkCharges = 2;
+        public const float FlankerBlinkRechargeTime = 8f;
+        public const float FlankerCloakDuration = 1.5f;
+        public const float FlankerCloakCooldown = 12f;
+        public const int FlankerCloakEnergyCost = 50;
 
         // Composition
         public const int MaxVanguards = 2;

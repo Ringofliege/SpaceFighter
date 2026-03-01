@@ -34,7 +34,7 @@ namespace SpaceFighter
 
         private void Update()
         {
-            if (!IsServerInitialized)
+            if (!IsServer)
                 return;
 
             if (GameManager.Instance == null)
