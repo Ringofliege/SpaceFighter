@@ -52,7 +52,7 @@ namespace SpaceFighter
 
         private void Update()
         {
-            if (_cloak == null || _mainRenderer == null) return;
+            if (_cloak == null || _mainRenderer == null || _ship == null) return;
 
             float targetAlpha = _cloak.IsCloaked ? (_ship.IsOwner ? 0.3f : 0f) : 1f;
 

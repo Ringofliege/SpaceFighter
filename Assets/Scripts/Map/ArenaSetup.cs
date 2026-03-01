@@ -78,7 +78,7 @@ namespace SpaceFighter
             var go = new GameObject("Wall");
             go.transform.position = pos;
             go.transform.rotation = Quaternion.Euler(0f, 0f, angle);
-            go.layer = 6;
+            go.layer = 10;
 
             var col = go.AddComponent<BoxCollider2D>();
             col.size = size;
@@ -97,7 +97,7 @@ namespace SpaceFighter
         {
             var go = new GameObject("Asteroid");
             go.transform.position = pos;
-            go.layer = 9;
+            go.layer = 11;
 
             var col = go.AddComponent<CircleCollider2D>();
             col.radius = radius;
